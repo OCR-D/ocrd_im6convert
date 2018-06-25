@@ -1,0 +1,21 @@
+{
+  "git_url": "https://github.com/OCR-D/ocrd_im6convert",
+  "version": "0.0.1",
+  "tools": {
+
+    "ocrd-im6convert": {
+      "executable": "ocrd-im6convert",
+      "categories": ["Image preprocessing"],
+      "steps": ["preprocessing/optimization/binarization"],
+      "description": "Convert and transform images ",
+      "parameters": {
+        "output-format": {
+          "type": "string",
+          "required": true,
+          "enum": ["image/tiff", "image/jp2", "image/png"]
+        }
+      }
+    }
+
+  }
+}

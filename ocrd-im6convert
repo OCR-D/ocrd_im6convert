@@ -1,0 +1,61 @@
+#!/bin/bash
+
+which ocrd >/dev/null 2>/dev/null || { echo "ocrd not in \$PATH. Panicking"; exit 1; }
+
+SHAREDIR=$(cd $(dirname $0);pwd)
+
+declare -A output_extensions=(
+    ['image/tiff']='.tif'
+    ['image/jp2']='.jp2'
+    ['image/png']='.png'
+)
+
+main () {
+
+    # Initialize the script
+    source `ocrd bashlib filename`
+
+    # Describe calling script to lib.bash
+    ocrd__wrap "$SHAREDIR/ocrd-tool.json" "ocrd-im6convert" "$@"
+
+    # Clone the METS
+    local working_dir=$(ocrd workspace clone "${argv[mets_file]}")
+
+    # Set output extension
+    local output_extension="${output_extensions[${params['output-format']}]}"
+
+    # Download the files and do the conversion
+    ocrd workspace -d "$working_dir" find \
+        -G "${argv[input_file_grp]}" \
+        -k local_filename \
+        -k ID \
+        -k groupId \
+        -k mimetype \
+        --download \
+    | while read infields;do
+        echo "$infields"
+
+        # Parse comma separated fields
+        local IFS=$'\t'
+        local fields=($infields)
+        local infile="${fields[0]}"
+
+        # Output filename
+        local output_basename="${infile//\.[^\.]*$/}"
+        local outfile="$output_basename.$output_extensions"
+
+        # Actual conversion
+        convert "$infile" "$outfile"
+
+        # Add the output files
+        ocrd workspace -d "$working_dir" add \
+            -G "${argv[output_file_grp]}" \
+            -i "${fields[1]}_TIF" \
+            -g "${fields[2]}" \
+            -m "${fields[3]}" \
+            "$outfile"
+    done
+}
+
+
+main "$@"
