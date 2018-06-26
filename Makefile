@@ -1,4 +1,5 @@
 PREFIX=$(HOME)/.local
+SHAREDIR=$(PREFIX)/share/ocrd-im6convert
 
 # BEGIN-EVAL makefile-parser --make-help Makefile
 
@@ -19,10 +20,13 @@ deps:
 # Install the executable in $(PREFIX)/bin
 install:
 	mkdir -p $(PREFIX)/bin
-	cp -t $(PREFIX)/bin ocrd-im6convert
+	sed 's,^SHAREDIR.*,SHAREDIR="$(SHAREDIR)",' ocrd-im6convert > $(PREFIX)/bin/ocrd-im6convert
 	chmod a+x $(PREFIX)/bin/ocrd-im6convert
+	mkdir -p $(SHAREDIR)
+	cp -t $(SHAREDIR) ocrd-tool.json
 
 # Uninstall script
 uninstall:
-	rm $(PREFIX)/bin/ocrd-im6convert
+	rm -rf $(PREFIX)/bin/ocrd-im6convert
+	rm -rf $(SHAREDIR)
 
