@@ -5,9 +5,9 @@ which ocrd >/dev/null 2>/dev/null || { echo "ocrd not in \$PATH. Panicking"; exi
 SHAREDIR=$(cd $(dirname $0);pwd)
 
 declare -A output_extensions=(
-    ['image/tiff']='.tif'
-    ['image/jp2']='.jp2'
-    ['image/png']='.png'
+    ['image/tiff']='tif'
+    ['image/jp2']='jp2'
+    ['image/png']='png'
 )
 
 main () {
@@ -24,6 +24,10 @@ main () {
     # Set output extension
     local output_extension="${output_extensions[${params['output-format']}]}"
 
+    echo " "
+    echo "Extension: $output_extension"
+    echo " "
+
     # Download the files and do the conversion
     ocrd workspace -d "$working_dir" find \
         -G "${argv[input_file_grp]}" \
@@ -35,6 +39,10 @@ main () {
     | while read infields;do
         echo "$infields"
 
+echo "" 
+    echo "Extension: $output_extension"
+echo ""
+
         # Parse comma separated fields
         local IFS=$'\t'
         local fields=($infields)
@@ -42,10 +50,13 @@ main () {
 
         # Output filename
         local output_basename="${infile//\.[^\.]*$/}"
-        local outfile="$output_basename.$output_extensions"
+	local output_basename=`echo $infile | sed 's/.[^.]*$//g'`
+        local outfile="$output_basename.$output_extension"
 
         # Actual conversion
         convert "$infile" "$outfile"
+        echo "convert \"$infile\" \"$outfile\""
+	
 
         # Add the output files
         ocrd workspace -d "$working_dir" add \
