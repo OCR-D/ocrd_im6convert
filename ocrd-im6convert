@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 which ocrd >/dev/null 2>/dev/null || { echo "ocrd not in \$PATH. Panicking"; exit 1; }
 
@@ -42,7 +42,7 @@ main () {
 
         # Output filename
         local output_basename="${infile//\.[^\.]*$/}"
-        local outfile="$output_basename.$output_extensions"
+        local outfile="$output_basename$output_extension"
 
         # Actual conversion
         convert "$infile" "$outfile"
