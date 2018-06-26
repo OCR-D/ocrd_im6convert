@@ -1,5 +1,8 @@
 PREFIX=$(HOME)/.local
+BINDIR=$(PREFIX)/bin
 SHAREDIR=$(PREFIX)/share/ocrd-im6convert
+
+SCRIPTS = ocrd-im6convert
 
 # BEGIN-EVAL makefile-parser --make-help Makefile
 
@@ -17,16 +20,20 @@ help:
 deps:
 	# apt-get install graphicsmagick
 
-# Install the executable in $(PREFIX)/bin
+# Install the executable in $(PREFIX)/bin and the ocrd-tool.json to $(SHAREDIR)
 install:
-	mkdir -p $(PREFIX)/bin
-	sed 's,^SHAREDIR.*,SHAREDIR="$(SHAREDIR)",' ocrd-im6convert > $(PREFIX)/bin/ocrd-im6convert
-	chmod a+x $(PREFIX)/bin/ocrd-im6convert
+	mkdir -p $(BINDIR)
+	for script in $(SCRIPTS);do \
+		sed 's,^SHAREDIR.*,SHAREDIR="$(SHAREDIR)",' $$script > $(BINDIR)/$$script ;\
+		chmod a+x $(BINDIR)/$$script ;\
+	done
 	mkdir -p $(SHAREDIR)
 	cp -t $(SHAREDIR) ocrd-tool.json
 
-# Uninstall script
+# Uninstall scripts and $(SHAREDIR)
 uninstall:
-	rm -rf $(PREFIX)/bin/ocrd-im6convert
-	rm -rf $(SHAREDIR)
+	for script in $(SCRIPTS);do \
+		rm --verbose --force "$(BINDIR)/$$script";\
+	done
+	rm -rfv $(SHAREDIR)
 
