@@ -18,7 +18,7 @@ help:
 
 # Install deps
 deps:
-	# apt-get install graphicsmagick
+	which convert || echo 'apt-get install graphicsmagick'
 
 # Install the executable in $(PREFIX)/bin and the ocrd-tool.json to $(SHAREDIR)
 install:

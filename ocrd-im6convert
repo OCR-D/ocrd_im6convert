@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/bin/bash -eu
 
 which ocrd >/dev/null 2>/dev/null || { echo "ocrd not in \$PATH. Panicking"; exit 1; }
 
-SHAREDIR=$(cd $(dirname $0);pwd)
+SHAREDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
-declare -A output_extensions=(
-    ['image/tiff']='.tif'
+declare -A out_extensions=(
+    ['image/tiff']='.tiff'
     ['image/jp2']='.jp2'
     ['image/png']='.png'
 )
@@ -18,42 +18,45 @@ main () {
     # Describe calling script to lib.bash
     ocrd__wrap "$SHAREDIR/ocrd-tool.json" "ocrd-im6convert" "$@"
 
-    # Clone the METS
-    local working_dir=$(ocrd workspace clone "${argv[mets_file]}")
+    cd "${argv[working_dir]}"
 
     # Set output extension
-    local output_extension="${output_extensions[${params['output-format']}]}"
+    local out_mimetype="${params['output-format']}"
+    local out_extension="${out_extensions[$out_mimetype]}"
 
     # Download the files and do the conversion
     ocrd workspace -d "$working_dir" find \
-        -G "${argv[input_file_grp]}" \
-        -k local_filename \
-        -k ID \
-        -k groupId \
-        -k mimetype \
-        --download \
-    | while read infields;do
-        echo "$infields"
-
+        -G "${argv[input_file_grp]}"      \
+        -k local_filename                 \
+        -k ID                             \
+        -k groupId                        \
+        -k mimetype                       \
+        --download                        \
+    | while read csv;do
         # Parse comma separated fields
         local IFS=$'\t'
-        local fields=($infields)
-        local infile="${fields[0]}"
+        local fields=($csv)
+
+        local in_fpath="${fields[0]}"
+        local in_id="${fields[1]}"
+        local in_groupid="${fields[2]}"
+        local in_mimetype="${fields[3]}"
 
         # Output filename
-        local output_basename="${infile//\.[^\.]*$/}"
-        local outfile="$output_basename$output_extension"
+        local out_fpath="${in_fpath//\.[^\.]*$/}$out_extension"
+        local out_id="${in_id}${out_extension}"
+        local out_groupid="$in_groupid"
 
         # Actual conversion
-        convert "$infile" "$outfile"
+        convert "$in_fpath" "$out_fpath"
 
         # Add the output files
         ocrd workspace -d "$working_dir" add \
-            -G "${argv[output_file_grp]}" \
-            -i "${fields[1]}_TIF" \
-            -g "${fields[2]}" \
-            -m "${fields[3]}" \
-            "$outfile"
+            -G "${argv[out_file_grp]}" \
+            -i "$out_id" \
+            -g "$out_groupid" \
+            -m "$out_mimetype" \
+            "$out_fpath"
     done
 }
 
