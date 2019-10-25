@@ -28,7 +28,7 @@ install:
 		chmod a+x $(BINDIR)/$$script ;\
 	done
 	mkdir -p $(SHAREDIR)
-	cp -t $(SHAREDIR) ocrd-tool.json
+	cp ocrd-tool.json $(SHAREDIR)
 
 # Uninstall scripts and $(SHAREDIR)
 uninstall:
