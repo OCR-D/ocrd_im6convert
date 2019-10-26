@@ -4,6 +4,9 @@ PREFIX ?= $(if $(VIRTUAL_ENV),$(VIRTUAL_ENV),$(CURDIR)/.local)
 BINDIR = $(PREFIX)/bin
 SHAREDIR = $(PREFIX)/share/ocrd-im6convert
 
+# Docker tag
+DOCKER_TAG = ocrd/im6convert
+
 # Python pip to install with ('$(PIP)')
 PIP ?= $(shell which pip)
 
@@ -19,11 +22,13 @@ help:
 	@echo "    deps         Install python packages"
 	@echo "    install      Install the executable in $(PREFIX)/bin and the ocrd-tool.json to $(SHAREDIR)"
 	@echo "    uninstall    Uninstall scripts and $(SHAREDIR)"
+	@echo "    docker       Build Docker image"
 	@echo ""
 	@echo "  Variables"
 	@echo ""
-	@echo "    PREFIX  Directory to install to ('$(PREFIX)')"
-	@echo "    PIP     Python pip to install with ('$(PIP)')"
+	@echo "    PREFIX      Directory to install to ('$(PREFIX)')"
+	@echo "    DOCKER_TAG  Docker tag"
+	@echo "    PIP         Python pip to install with ('$(PIP)')"
 
 # END-EVAL
 
@@ -57,3 +62,6 @@ uninstall:
 	done
 	rm -rfv $(SHAREDIR)
 
+# Build Docker image
+docker:
+	docker build -t '$(DOCKER_TAG)' .
