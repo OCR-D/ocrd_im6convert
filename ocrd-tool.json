@@ -17,6 +17,7 @@
       "parameters": {
         "output-format": {
           "type": "string",
+          "description": "Desired media type of output",
           "required": true,
           "enum": ["image/tiff", "image/jp2", "image/png"]
         }
