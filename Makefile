@@ -1,6 +1,10 @@
+# Directory to install to ('$(PREFIX)')
 PREFIX ?= $(if $(VIRTUAL_ENV),$(VIRTUAL_ENV),$(CURDIR)/.local)
+
 BINDIR = $(PREFIX)/bin
 SHAREDIR = $(PREFIX)/share/ocrd-im6convert
+
+# Python pip to install with ('$(PIP)')
 PIP ?= $(shell which pip)
 
 SCRIPTS = ocrd-im6convert
@@ -11,15 +15,16 @@ help:
 	@echo ""
 	@echo "  Targets"
 	@echo ""
-	@echo "    deps-ubuntu  Install system-wide dependencies"
-	@echo "    deps         Install python dependencies
-	@echo "    install      Install the executable in $(PREFIX)/bin"
-	@echo "    uninstall    Uninstall script"
-        @echo ""	
-        @echo "  Variables"
-        @echo ""
-        @echo "    PREFIX         directory to install to ('$(PREFIX)')"
-        @echo "    PIP            Python pip to install with ('$(PIP)')"
+	@echo "    deps-ubuntu  Install system packages (for use with containers)"
+	@echo "    deps         Install python packages"
+	@echo "    install      Install the executable in $(PREFIX)/bin and the ocrd-tool.json to $(SHAREDIR)"
+	@echo "    uninstall    Uninstall scripts and $(SHAREDIR)"
+	@echo ""
+	@echo "  Variables"
+	@echo ""
+	@echo "    PREFIX  Directory to install to ('$(PREFIX)')"
+	@echo "    PIP     Python pip to install with ('$(PIP)')"
+
 # END-EVAL
 
 # Install system packages (for use with containers)
@@ -38,11 +43,11 @@ install: deps
 		chmod a+x $(BINDIR)/$$script ;\
 	done
 	mkdir -p $(SHAREDIR)
-	cp -t $(SHAREDIR) ocrd-tool.json
+	cp ocrd-tool.json $(SHAREDIR)
 ifeq ($(findstring $(BINDIR),$(subst :, ,$(PATH))),)
-        @echo "you need to add '$(BINDIR)' to your PATH"
+	@echo "you need to add '$(BINDIR)' to your PATH"
 else
-        @echo "you already have '$(BINDIR)' in your PATH"
+	@echo "you already have '$(BINDIR)' in your PATH"
 endif
 
 # Uninstall scripts and $(SHAREDIR)
