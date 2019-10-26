@@ -6,11 +6,18 @@
     "ocrd-im6convert": {
       "executable": "ocrd-im6convert",
       "categories": ["Image preprocessing"],
-      "steps": ["preprocessing/optimization/binarization"],
-      "description": "Convert and transform images ",
+      "steps": ["preprocessing/optimization"],
+      "description": "Convert and transform images",
+      "input_file_grp": [
+        "OCR-D-IMG"
+      ],
+      "output_file_grp": [
+        "OCR-D-IMG"
+      ],
       "parameters": {
         "output-format": {
           "type": "string",
+          "description": "Desired media type of output",
           "required": true,
           "enum": ["image/tiff", "image/jp2", "image/png"]
         }
