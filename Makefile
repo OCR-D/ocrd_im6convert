@@ -34,7 +34,7 @@ help:
 
 # Install system packages (for use with containers)
 deps-ubuntu:
-	apt-get install imagemagick
+	apt-get -y install imagemagick
 
 # Install python packages
 deps:
