@@ -1,22 +1,31 @@
 #!/bin/bash
+# shellcheck disable=SC2086
 
 set -eu
 set -o pipefail
 
 which ocrd >/dev/null 2>/dev/null || { echo "ocrd not in \$PATH. Panicking"; exit 1; }
 
-SHAREDIR=$(cd $(dirname $0);pwd)
+SHAREDIR="$(cd "$(dirname "$0")" >/dev/null && pwd)"
 
-declare -A output_extensions=(
-    ['image/tiff']='.tif'
-    ['image/jp2']='.jp2'
-    ['image/png']='.png'
-)
+MIMETYPE_PAGE=$(ocrd bashlib constants MIMETYPE_PAGE)
+declare -A MIME_TO_EXT
+eval "MIME_TO_EXT=( $(ocrd bashlib constants MIME_TO_EXT) )"
+
+# FIXME: add a bashlib wrapper for logging to use here
+function log {
+    echo >&2 "$(date +%T.%3N) $LEVEL ocrd-im6convert - $1"
+}
+function critical { LEVEL=CRITICAL log "$1"; }
+function error { LEVEL=ERROR log "$1"; }
+function warning { LEVEL=WARNING log "$1"; }
+function info { LEVEL=INFO log "$1"; }
+function debug { LEVEL=DEBUG log "$1"; }
 
 main () {
-
-    # Initialize the script
-    source `ocrd bashlib filename`
+    # Load ocrd bashlib functions
+    # shellcheck source=../core/ocrd/bashlib/lib.bash
+    source $(ocrd bashlib filename)
 
     # Describe calling script to lib.bash
     ocrd__wrap "$SHAREDIR/ocrd-tool.json" "ocrd-im6convert" "$@"
@@ -28,7 +37,7 @@ main () {
     mkdir -p $out_file_grp
 
     # Set output extension
-    local output_extension="${output_extensions[${params['output-format']}]}"
+    local output_extension="${MIME_TO_EXT[${params['output-format']}]}"
 
     # Download the files and do the conversion
     local IFS=$'\n'
@@ -53,7 +62,7 @@ main () {
         local pageid="${fields[2]:-}"
 
         if ! test -f "$in_file"; then
-           echo "ERROR: input file \"$in_file\" ID=${in_id} (pageId=${pageid}) is not on disk" >&2
+           error "input file \"$in_file\" ID=${in_id} (pageId=${pageid}) is not on disk"
            continue
         fi
 
@@ -65,6 +74,7 @@ main () {
         local out_file="$out_file_grp/${out_id}$output_extension"
 
         # Actual conversion
+        info "processing image input file $in_id ($pageid)"
         convert "$in_file" "$out_file"
 
         # Add the output files
