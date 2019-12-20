@@ -15,11 +15,21 @@
         "OCR-D-IMG"
       ],
       "parameters": {
+        "input-options": {
+          "type": "string",
+          "description": "e.g. -density 600x600 -wavelet-denoise 1%x0.1",
+          "default": ""
+        },
         "output-format": {
           "type": "string",
           "description": "Desired media type of output",
           "required": true,
           "enum": ["image/tiff", "image/jp2", "image/png"]
+        },
+        "output-options": {
+          "type": "string",
+          "description": "e.g. -resample 300x300 -alpha deactivate -normalize -despeckle -noise 2 -negate -morphology close diamond",
+          "default": ""
         }
       }
     }

@@ -37,7 +37,12 @@ main () {
     mkdir -p $out_file_grp
 
     # Set output extension
-    local output_extension="${MIME_TO_EXT[${params['output-format']}]}"
+    local output_extension
+    output_extension="${MIME_TO_EXT[${params['output-format']}]}"
+    # Set input and output options
+    local input_options output_options
+    input_options=(${params['input-options']})
+    output_options=(${params['output-options']})
 
     # Download the files and do the conversion
     local IFS=$'\n'
@@ -75,7 +80,7 @@ main () {
 
         # Actual conversion
         info "processing image input file $in_id ($pageid)"
-        convert "$in_file" "$out_file"
+        convert "${input_options[@]}" "$in_file" "${output_options[@]}" "$out_file"
 
         # Add the output files
         declare -a options
