@@ -2,6 +2,16 @@ Change Log
 ==========
 Versioned according to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+## 0.0.3
+
+Changed:
+
+- Use bash from env instead of fixed shebang
+- Ensure minimum bash version
+
+
 ## 0.0.2
 
 First release
