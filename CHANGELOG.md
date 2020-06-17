@@ -4,6 +4,11 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Changed:
+
+  - Use `ocrd log` for logging, #15
+  - Implement `--overwrite`, #15
+
 ## 0.0.3
 
 Changed:
