@@ -13,20 +13,12 @@ MIMETYPE_PAGE=$(ocrd bashlib constants MIMETYPE_PAGE)
 declare -A MIME_TO_EXT
 eval "MIME_TO_EXT=( $(ocrd bashlib constants MIME_TO_EXT) )"
 
-# FIXME: add a bashlib wrapper for logging to use here
-function log {
-    echo >&2 "$(date +%T.%3N) $LEVEL ocrd-im6convert - $1"
-}
-function critical { LEVEL=CRITICAL log "$1"; }
-function error { LEVEL=ERROR log "$1"; }
-function warning { LEVEL=WARNING log "$1"; }
-function info { LEVEL=INFO log "$1"; }
-function debug { LEVEL=DEBUG log "$1"; }
-
 main () {
     # Load ocrd bashlib functions
     # shellcheck source=../core/ocrd/bashlib/lib.bash
     source $(ocrd bashlib filename)
+
+    ocrd__minversion 2.10.4
 
     # Describe calling script to lib.bash
     ocrd__wrap "$SHAREDIR/ocrd-tool.json" "ocrd-im6convert" "$@"
@@ -68,7 +60,7 @@ main () {
         local pageid="${fields[2]:-}"
 
         if ! test -f "$in_file"; then
-           error "input file \"$in_file\" ID=${in_id} (pageId=${pageid}) is not on disk"
+           ocrd log error "input file \"$in_file\" ID=${in_id} (pageId=${pageid}) is not on disk"
            continue
         fi
 
@@ -80,7 +72,7 @@ main () {
         local out_file="$out_file_grp/${out_id}$output_extension"
 
         # Actual conversion
-        info "processing image input file $in_id ($pageid)"
+        ocrd log info "processing image input file $in_id ($pageid)"
         convert "${input_options[@]}" "$in_file" "${output_options[@]}" "$out_file"
 
         # Add the output files
@@ -89,6 +81,10 @@ main () {
             options=( -g $pageid )
         else
             options=()
+        fi
+
+        if [[ "${ocrd__argv[overwrite]}" = true ]];then
+            options+=( --force )
         fi
         options+=( -G $out_file_grp
                    -m "${params['output-format']}"
