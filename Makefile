@@ -2,7 +2,7 @@
 PREFIX ?= $(if $(VIRTUAL_ENV),$(VIRTUAL_ENV),$(CURDIR)/.local)
 
 BINDIR = $(PREFIX)/bin
-SHAREDIR = $(PREFIX)/share/ocrd-im6convert
+SHAREDIR = $(PREFIX)/share/ocrd_im6convert
 
 # Docker tag
 DOCKER_TAG = ocrd/im6convert
