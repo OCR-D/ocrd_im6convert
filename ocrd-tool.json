@@ -1,6 +1,6 @@
 {
   "git_url": "https://github.com/OCR-D/ocrd_im6convert",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "tools": {
 
     "ocrd-im6convert": {
