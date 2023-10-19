@@ -76,21 +76,25 @@ main () {
         convert "${input_options[@]}" "$in_file" "${output_options[@]}" "$out_file"
 
         # Add the output files
-        declare -a options
+        declare -a add_options
         if [ -n "$pageid" ]; then
-            options=( -g $pageid )
+            add_options=( -g $pageid )
         else
-            options=()
+            add_options=()
         fi
 
         if [[ "${ocrd__argv[overwrite]}" = true ]];then
-            options+=( --force )
+            add_options+=( --force )
         fi
-        options+=( -G $out_file_grp
+        add_options+=( -G $out_file_grp
                    -m "${params['output-format']}"
                    -i "$out_id"
                    "$out_file" )
-        ocrd workspace add "${options[@]}"
+        declare -a workspace_options
+        if [[ -n "${ocrd__argv[mets_server_url]}" ]];then
+            workspace_options+=( -U "${ocrd__argv[mets_server_url]}" )
+        fi
+        ocrd workspace "${workspace_options[@]}" add "${add_options[@]}"
     done
 }
 
