@@ -18,7 +18,7 @@ main () {
     # shellcheck source=../core/ocrd/bashlib/lib.bash
     source $(ocrd bashlib filename)
 
-    ocrd__minversion 2.10.4
+    ocrd__minversion 2.58
 
     # Describe calling script to lib.bash
     ocrd__wrap "$SHAREDIR/ocrd-tool.json" "ocrd-im6convert" "$@"
