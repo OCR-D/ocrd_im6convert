@@ -4,6 +4,10 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Fixed:
+
+  * require OCR-D/core >= 2.58.1
+
 ## [0.1.0] - 2023-10-20
 
 Added:
@@ -40,6 +44,7 @@ First release
 - additional options can be passed to `convert(1)`
 
 <!-- link-labels -->
+[0.1.1]: ../../compare/v0.1.1...v0.1.0
 [0.1.0]: ../../compare/v0.1.0...v0.0.5
 [0.0.5]: ../../compare/v0.0.5...v0.0.4
 [0.0.4]: ../../compare/v0.0.4...v0.0.3
