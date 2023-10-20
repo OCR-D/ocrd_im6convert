@@ -4,6 +4,8 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## [0.1.1] - 2023-10-20
+
 Fixed:
 
   * require OCR-D/core >= 2.58.1
