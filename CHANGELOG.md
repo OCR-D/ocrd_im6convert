@@ -4,6 +4,8 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## [0.1.0] - 2023-10-20
+
 Added:
 
   * Support for `--mets-server-url`, #17
@@ -38,6 +40,7 @@ First release
 - additional options can be passed to `convert(1)`
 
 <!-- link-labels -->
+[0.1.0]: ../../compare/v0.1.0...v0.0.5
 [0.0.5]: ../../compare/v0.0.5...v0.0.4
 [0.0.4]: ../../compare/v0.0.4...v0.0.3
 [0.0.3]: ../../compare/v0.0.3...v0.0.2
