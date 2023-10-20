@@ -4,6 +4,10 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Added:
+
+  * Support for `--mets-server-url`, #17
+
 ## [0.0.5] - 2021-01-29
 
 Changed:
