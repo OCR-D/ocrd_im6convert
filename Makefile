@@ -5,7 +5,8 @@ BINDIR = $(PREFIX)/bin
 SHAREDIR = $(PREFIX)/share/ocrd-im6convert
 
 # Docker tag
-DOCKER_TAG = ocrd/im6convert
+DOCKER_BASE_IMAGE ?= docker.io/ocrd/core:v2.69.0
+DOCKER_TAG ?= ocrd/im6convert
 
 # Python pip to install with ('$(PIP)')
 PIP ?= $(shell which pip)
@@ -65,6 +66,9 @@ uninstall:
 # Build Docker image
 docker:
 	docker build \
+		--build-arg DOCKER_BASE_IMAGE=$(DOCKER_BASE_IMAGE) \
 		--build-arg VCS_REF=$$(git rev-parse --short HEAD) \
 		--build-arg BUILD_DATE=$$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
 		-t '$(DOCKER_TAG)' .
+
+.PHONY: help deps deps-ubuntu install uninstall docker
