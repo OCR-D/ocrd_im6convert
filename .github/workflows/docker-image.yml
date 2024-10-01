@@ -27,7 +27,7 @@ jobs:
     - name: Push image to Dockerhub
       run: docker push ocrd/im6convert
     - name: Alias the Docker image for GHCR
-      run: docker tag ocrd/im6convert ghcr.io/${{ github.repository }}
+      run: docker tag ocrd/im6convert ghcr.io/ocr-d/ocrd_im6convert
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v2
       with:
@@ -35,4 +35,4 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Push image to Github Container Registry
-      run: docker push ghcr.io/${{ github.repository }}
+      run: docker push ghcr.io/ocr-d/ocrd_im6convert
